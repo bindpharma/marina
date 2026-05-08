@@ -1,0 +1,22 @@
+{
+  "name": "Aslan Marin - Yat Döşeme ve Dekorasyon",
+  "short_name": "Aslan Marin",
+  "description": "İstanbul yat döşeme, tente, halı, minder ve dekorasyon atölyesi.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5EFE6",
+  "theme_color": "#0A1628",
+  "lang": "tr",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
