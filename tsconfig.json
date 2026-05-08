@@ -1,0 +1,155 @@
+# Aslan Marin — aslanmarin.com
+
+İstanbul Sütlüce'de yer alan Aslan Marin Yat Döşeme ve Dekorasyon firmasının kurumsal websitesi. Next.js 14 + TypeScript + Tailwind CSS ile inşa edilmiştir.
+
+## Özellikler
+
+- 22 sayfa: ana sayfa, hakkımızda, 5 hizmet sayfası, projeler, marinalar, SSS, iletişim, admin paneli + login + API rotaları + sitemap/robots
+- **Beyaz tabanlı modern palet** — `#FFFFFF`, `sand-100`, `gold-dark` (#C5984D) altın aksanlar, `navy-950` derin lacivert
+- **Tüm bölümlerde görsel** — `SmartImage` bileşeni Unsplash CDN üzerinden yüksek kaliteli marin/yat görselleri sunar; ağ hatası durumunda zarif SVG fallback'leri devreye girer
+- **Admin paneli** — `/admin/giris` üzerinden cookie tabanlı kimlik doğrulama ile teklif/iletişim formu yönetimi (yeni → iletişimde → kapalı durum akışı, istatistikler, telefon/WhatsApp tek tık)
+- **Vercel KV** entegrasyonu — formlar production'da KV'ye yazılır, yerel geliştirmede hafıza içi fallback
+- **Honeypot** ile spam koruması, sunucu tarafı validasyon
+- **Müşteri yorumları** (6 referans + Review schema + AggregateRating 5.0/5.0)
+- **Marka materyalleri** bölümü (Sunbrella, Stamoid, Silvertex, Serge Ferrari, YKK, Strataglass)
+- **Garanti rozetleri** ile güven inşası
+- **Genişletilmiş SEO** — Schema.org JSON-LD: LocalBusiness, Organization, WebSite, Service, BreadcrumbList, FAQPage, Review, AggregateRating
+- Otomatik sitemap + robots.txt, geo meta etiketleri, Open Graph, Twitter Card
+- 12 İstanbul marinası için özel hizmet bölge sayfaları
+- WhatsApp float butonu, sticky header, scroll reveal animasyonları
+- 100% responsive — mobile-first
+- Tüm sayfalar statik render — hızlı yüklenir
+
+## Kurulum
+
+```bash
+npm install
+npm run dev      # geliştirme sunucusu (http://localhost:3000)
+npm run build    # production build
+npm start        # production server
+```
+
+## Deployment (Vercel)
+
+1. Repo'yu GitHub'a push edin
+2. Vercel'de yeni proje oluşturun, repo'yu seçin
+3. Çevre değişkenlerini ayarlayın (aşağıda)
+4. **Storage → KV** sekmesinden bir KV veritabanı oluşturup projeye bağlayın (KV_REST_API_* değişkenleri otomatik gelir)
+5. Deploy
+
+### Çevre Değişkenleri
+
+Vercel proje ayarlarından eklenmesi gerekenler:
+
+| Değişken | Açıklama | Zorunlu |
+|---|---|---|
+| `ADMIN_PASSWORD` | Admin paneli şifresi | ✓ (üretim için zorunlu, yoksa varsayılan `admin123`) |
+| `ADMIN_SESSION_SECRET` | Cookie imzalama için gizli anahtar (rastgele 32+ karakter) | ✓ |
+| `KV_REST_API_URL` | Vercel KV REST URL | KV bağlandığında otomatik |
+| `KV_REST_API_TOKEN` | Vercel KV yazma token | KV bağlandığında otomatik |
+| `KV_REST_API_READ_ONLY_TOKEN` | Vercel KV okuma token | KV bağlandığında otomatik |
+
+## Admin Paneli
+
+- Yol: `/admin/giris` → giriş → `/admin`
+- Kullanıcı adı yok; sadece şifre (`ADMIN_PASSWORD`)
+- Oturum süresi: 7 gün (cookie tabanlı)
+- **Talepler** sekmesi:
+  - Toplam, yeni, son 7 gün, son 30 gün istatistikleri
+  - Filtre çipleri: tümü / yeni / iletişimde / kapalı
+  - Detay paneli: telefon (tek tık ara), WhatsApp, e-posta, mesaj, hizmet
+  - Durum güncelleme, silme
+- **Ayarlar** sekmesi (`/admin/ayarlar`):
+  - Logo yükleme (SVG, PNG, JPEG, WebP — max 1 MB)
+  - Açık zemin + koyu zemin için ayrı logo seçeneği
+  - Marka adı override (boşsa "Aslan Marin")
+  - Tag line override (boşsa "Yat Döşeme · Est. 2007")
+  - Yüklenen logolar Vercel KV'ye base64 olarak kaydedilir
+  - Sitede 5 dk cache; değişiklik için tarayıcıda hard refresh (Ctrl+Shift+R)
+
+## Görselleri Kendi Görselleriniz ile Değiştirme
+
+`lib/images.ts` dosyasında 14 ayrı görsel anahtar tanımlı (hero, about, project1-6, materials, workshop, vb.). Her birinin URL'sini aslanmarin.com'daki kendi görsellerinizle değiştirebilirsiniz:
+
+```typescript
+export const IMAGES = {
+  hero: {
+    src: 'https://aslanmarin.com/wp-content/uploads/sizin-foto.jpg',
+    alt: 'Yatınızdaki uygulama',
+    width: 2000,
+    height: 1200,
+  },
+  // ...
+};
+```
+
+`next.config.mjs` zaten `aslanmarin.com` için `remotePatterns` içerir; herhangi bir konfigürasyon gerekmez.
+
+## Yapısal SEO Özellikleri
+
+- Her sayfa için özelleştirilmiş `<title>`, meta description, keywords, canonical URL
+- Open Graph + Twitter Card meta etiketleri
+- Geo meta etiketleri (Istanbul, 41.0498, 28.9591)
+- Schema.org structured data:
+  - `LocalBusiness` — adres, telefon, çalışma saatleri, hizmet bölgesi
+  - `Organization` — kurumsal kimlik
+  - `Service` — her hizmet sayfası için ayrı
+  - `FAQPage` — SSS sayfası için
+  - `BreadcrumbList` — tüm alt sayfalar için
+  - `Review` + `AggregateRating` — müşteri yorumları için
+- Marina-spesifik anahtar kelimeler: "tuzla yat döşeme", "pendik yat döşeme", "kalamış yat döşeme", "ataköy yat tentesi" vb.
+- Hizmet-spesifik anahtar kelimeler: "yat tentesi", "bimini", "kapela", "marin halı", "fly bridge minder", "yat tavan kaplama" vb.
+- `robots.ts` ve `sitemap.ts` ile otomatik üretim
+- Admin paneli `noindex` ile tarayıcılardan gizlenir
+
+## Klasör Yapısı
+
+```
+aslanmarin-site/
+├── app/
+│   ├── (site)/              # Genel ziyaretçi sayfaları (Header + Footer ile)
+│   │   ├── hakkimizda/
+│   │   ├── hizmetler/
+│   │   │   ├── yat-doseme/
+│   │   │   ├── yat-tentesi/
+│   │   │   ├── yat-halisi/
+│   │   │   ├── yat-minderleri/
+│   │   │   └── yat-dekorasyonu/
+│   │   ├── iletisim/
+│   │   ├── marinalar/
+│   │   ├── projeler/
+│   │   ├── sss/
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── admin/               # Admin paneli (kendi layout'u, noindex)
+│   │   ├── giris/
+│   │   ├── AdminClient.tsx
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── api/                 # API rotaları
+│   │   ├── admin/
+│   │   │   ├── login/
+│   │   │   ├── logout/
+│   │   │   └── submissions/[id]/
+│   │   └── contact/
+│   ├── globals.css
+│   ├── layout.tsx           # Kök layout (font, schema)
+│   ├── robots.ts
+│   └── sitemap.ts
+├── components/              # 19 bileşen
+├── lib/
+│   ├── auth.ts              # Cookie tabanlı admin auth
+│   ├── constants.ts         # SITE, CONTACT, SERVICES, MARINAS, FAQS
+│   ├── images.ts            # Merkezi görsel kaydı
+│   ├── seo.ts               # Metadata + JSON-LD üreticileri
+│   └── store.ts             # Vercel KV (in-memory fallback)
+├── public/
+└── tailwind.config.ts
+```
+
+## Iletişim
+
+- **Telefon:** +90 531 900 60 53
+- **WhatsApp:** [905319006053](https://wa.me/905319006053)
+- **E-posta:** info@aslanmarin.com
+- **Adres:** Sütlüce, Şekerkuyu Sk. No:45, 34445 Beyoğlu/İstanbul
