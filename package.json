@@ -1,36 +1,28 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-  poweredByHeader: false,
-  compress: true,
-  images: {
-    formats: ['image/avif', 'image/webp'],
-    remotePatterns: [
-      // Unsplash CDN
-      { protocol: 'https', hostname: 'images.unsplash.com' },
-      // Plus URL — Unsplash plus images
-      { protocol: 'https', hostname: 'plus.unsplash.com' },
-      // Pexels (alternative)
-      { protocol: 'https', hostname: 'images.pexels.com' },
-      // aslanmarin.com — kendi WordPress'inizden görsel kullanmak için
-      { protocol: 'https', hostname: 'aslanmarin.com' },
-      { protocol: 'https', hostname: 'www.aslanmarin.com' },
-    ],
+{
+  "name": "aslanmarin-website",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          { key: 'X-Content-Type-Options', value: 'nosniff' },
-          { key: 'X-Frame-Options', value: 'DENY' },
-          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
-          { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
-        ],
-      },
-    ];
+  "dependencies": {
+    "@vercel/kv": "^2.0.0",
+    "next": "14.2.15",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
-};
-
-export default nextConfig;
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.19",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "14.2.15",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.4.5"
+  }
+}

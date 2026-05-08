@@ -1,4 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="6" fill="#0A1628"/>
-  <path d="M16 7v18M11 11h10M9 20c3 2 5 3 7 3s4-1 7-3" stroke="#C9A961" stroke-width="2" stroke-linecap="round" fill="none"/>
-</svg>
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  poweredByHeader: false,
+  compress: true,
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    remotePatterns: [
+      // Unsplash CDN
+      { protocol: 'https', hostname: 'images.unsplash.com' },
+      // Plus URL — Unsplash plus images
+      { protocol: 'https', hostname: 'plus.unsplash.com' },
+      // Pexels (alternative)
+      { protocol: 'https', hostname: 'images.pexels.com' },
+      // aslanmarin.com — kendi WordPress'inizden görsel kullanmak için
+      { protocol: 'https', hostname: 'aslanmarin.com' },
+      { protocol: 'https', hostname: 'www.aslanmarin.com' },
+    ],
+  },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          { key: 'X-Content-Type-Options', value: 'nosniff' },
+          { key: 'X-Frame-Options', value: 'DENY' },
+          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+          { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+          { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+        ],
+      },
+    ];
+  },
+};
+
+export default nextConfig;

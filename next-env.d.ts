@@ -1,39 +1,5 @@
-# dependencies
-node_modules/
-.pnp
-.pnp.js
+/// <reference types="next" />
+/// <reference types="next/image-types/global" />
 
-# testing
-coverage/
-
-# next.js
-.next/
-out/
-
-# production
-build/
-dist/
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# local env files
-.env*.local
-.env
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-# IDE
-.vscode/
-.idea/
+// NOTE: This file should not be edited
+// see https://nextjs.org/docs/app/building-your-application/configuring/typescript for more information.
